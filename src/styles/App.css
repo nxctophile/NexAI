@@ -1,92 +1,141 @@
-.root-container {
-    min-height: 100vh;
-    min-width: 100vw;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.navigation-section {
-    display: flex;
-    padding-left: .8em;
-    background: #222;
-}
-
-.nav-button {
-    border: none;
-    padding: 0;
-    border-radius: 20rem;
-    font-size: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: .1em;
-    margin: .4em 0;
-    margin-right: .4em;
-}
-
-.nav-button > span {
-    opacity: 0;
-    font-size: .8rem;
-}
-
-#close {
-    background-color: #F76059;
-}
-#minimize {
-    background-color: #F9BD35;
-}
-#restore {
-    background-color: #21CC3D;
-}
-
-.main-container {
-    height: 50vh;
-    width: 50vw;
-    background: #111;
-    border-radius: .8em;
-    overflow: scroll;
-    overflow-x: hidden;
-}
-
-::-webkit-scrollbar {
-    width: 10px;
-    background: #333;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #666;
-}
-
-.command {
-    display: flex;
-    margin: .5em .5em;
-  font-family: "Ubuntu Mono", monospace;
-  font-size: 1rem;
+* {
+  font-family: "Poppins", sans-serif;
   color: #ddd;
 }
 
-/* .path {
-} */
-
-.user-input {
-    margin-left: .2em;
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #ddd;
-    font-family: "Ubuntu Mono", monospace;
-    font-size: 1rem;
+.root-container {
+  min-height: 100vh;
+  min-width: 100vw;
+  background: #171717;
+  display: flex;
+  /* justify-content: flex-end; */
+  align-items: center;
+  overflow: hidden;
 }
 
-
-.nothing {
-    font-family: "Ubuntu Mono", monospace;
-    font-size: 1.2rem;
+.main-container {
+  height: 100vh;
+  width: 85vw;
+  background: #171717;
+  overflow: scroll;
+  overflow-x: hidden;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 20rem;
+}
+
+.sidebar {
+  height: 96vh;
+  width: 15vw;
+  background: #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 4em;
+  border-bottom-right-radius: 4em;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.main-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 2em 0;
+}
+
 
 .loading-icon {
-    width: 50px;
+  width: 50px;
+}
+
+.command, .response {
+    padding: 1em;
+}
+
+.command-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 60%;
+}
+
+.command {
+  background: #333;
+  border-radius: 20rem;
+  padding: 1em 1.2em;
+}
+
+.response {
+  width: 60%;
+}
+
+.nexai-response {
+  display: flex;
+  margin-top: 1em;
+}
+
+.nexai-logo {
+  height: 20px;
+  width: 20px;
+}
+
+.nexai-text {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-left: .4em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 15vw;
+  bottom: 0;
+  height: 10%;
+  width: 85%;
+  background: #171717ee;
+}
+
+.user-input {
+  display: flex;
+}
+
+.textbox {
+  min-height: 3em;
+  width: 35vw;
+  margin-left: 0.2em;
+  overflow: visible;
+  border: 2px solid #333;
+  border-radius: 20rem;
+  outline: none;
+  background: #171717;
+  font-size: 1rem;
+  padding: 0 1em;
+}
+
+.send-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: #222;
+  border-radius: 20rem;
+  padding: 0.5em 1em;
+  margin-left: 0.5em;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background: #333;
 }
