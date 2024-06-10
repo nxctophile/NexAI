@@ -5,32 +5,65 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { twilight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Sidebar from "./components/Sidebar";
 import nex from "/nex-white-stroke-100.png";
+import account from "./assets/account.png";
 
 export default function App() {
   const [response, setResponse] = useState<string | undefined>(undefined);
   const [command, setCommand] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
+  const [conversation, setConversation] = useState<Array<object>>([]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const sendRequest = async (event) => {
     event.preventDefault();
-    setCommand(inputRef.current.value);
-    setLoading(true);
     const prompt = inputRef.current.value;
-    const generatedResponse = await fetch(
-      `http://localhost:8080?prompt=${prompt}`
-    );
-    const parsedGeneratedResponse = await generatedResponse.json();
-    console.log(parsedGeneratedResponse);
-    setResponse(parsedGeneratedResponse.response);
-    inputRef.current.value = "";
-    setLoading(false);
+    if (prompt.length > 0) {
+      setCommand(prompt);
+      // setConversation((prevConversation) => [
+      //   ...prevConversation,
+      //   {
+      //     isPrompt: true,
+      //     message: prompt
+      //   },
+      // ]);
+      inputRef.current.value = "";
+      setLoading(true);
+      const generatedResponse = await fetch(
+        `http://localhost:8080?prompt=${prompt}`
+      );
+
+      const parsedGeneratedResponse = await generatedResponse.json();
+      console.log(parsedGeneratedResponse);
+      setResponse(parsedGeneratedResponse.response);
+      // setConversation((prevConversation) => [
+      //   ...prevConversation,
+      //   {
+      //     isPrompt: false,
+      //     message: parsedGeneratedResponse.response
+      //   },
+      // ]);
+
+      if (!generatedResponse.ok)
+        setResponse(
+          "Sorry, I was unable to generate a response. Please try again."
+        );
+      setLoading(false);
+    }
   };
 
   return (
     <main className="root-container">
       <Sidebar />
+
+      <div className="button-container">
+        <button className="account">
+          <span className="material-symbols-outlined">share</span>
+        </button>
+        <button className="account">
+          <img src={account} alt="Account" />
+        </button>
+      </div>
 
       <section className="main-container">
         <section className="main-section">
@@ -39,7 +72,7 @@ export default function App() {
           </div>
 
           {loading && (
-            <>
+            <div className="response">
               <div className="nexai-response">
                 <img className="nexai-logo" src={nex} alt="" />
                 <div className="nexai-text">NexAI</div>
@@ -49,7 +82,7 @@ export default function App() {
                 src="https://chatbot.rediff.com/public/typing.gif"
                 alt="Loading..."
               />
-            </>
+            </div>
           )}
 
           {response && (
