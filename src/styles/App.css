@@ -57,17 +57,17 @@
   width: 50px;
 }
 
-.command, .response {
+.prompt, .response {
     padding: 1em;
 }
 
-.command-container {
+.prompt-container {
   display: flex;
   justify-content: flex-end;
   width: 60%;
 }
 
-.command {
+.prompt {
   background: #333;
   border-radius: 20rem;
   padding: .8em 1.2em;

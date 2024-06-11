@@ -1,33 +1,33 @@
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import "./styles/App.css";
-import Markdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { twilight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Sidebar from "./components/Sidebar";
-import nex from "/nex-white-stroke-100.png";
 import account from "./assets/account.png";
+import InputBox from "./components/InputBox";
+import Response from "./components/conversation/Response";
+import ResponseLoading from "./components/loading/ResponseLoading";
+import Prompt from "./components/conversation/Prompt";
+import HeroSection from "./components/HeroSection";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./redux/store";
+import { addMessage } from "./redux/conversation/conversationSlice";
 
 export default function App() {
-  const [response, setResponse] = useState<string | undefined>(undefined);
-  const [command, setCommand] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
-  const [conversation, setConversation] = useState<Array<object>>([]);
+
+  const conversation = useSelector(
+    (state: RootState) => state.conversation.value
+  );
+  const dispatch = useDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const sendRequest = async (event) => {
+  const sendRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const prompt = inputRef.current.value;
+    const prompt = inputRef.current?.value ?? "";
+    inputRef.current.value = "";
+
     if (prompt.length > 0) {
-      setCommand(prompt);
-      // setConversation((prevConversation) => [
-      //   ...prevConversation,
-      //   {
-      //     isPrompt: true,
-      //     message: prompt
-      //   },
-      // ]);
-      inputRef.current.value = "";
+      dispatch(addMessage({ isPrompt: true, message: prompt }));
       setLoading(true);
       const generatedResponse = await fetch(
         `http://localhost:8080?prompt=${prompt}`
@@ -35,18 +35,20 @@ export default function App() {
 
       const parsedGeneratedResponse = await generatedResponse.json();
       console.log(parsedGeneratedResponse);
-      setResponse(parsedGeneratedResponse.response);
-      // setConversation((prevConversation) => [
-      //   ...prevConversation,
-      //   {
-      //     isPrompt: false,
-      //     message: parsedGeneratedResponse.response
-      //   },
-      // ]);
+      dispatch(
+        addMessage({
+          isPrompt: false,
+          message: parsedGeneratedResponse.response,
+        })
+      );
 
       if (!generatedResponse.ok)
-        setResponse(
-          "Sorry, I was unable to generate a response. Please try again."
+        dispatch(
+          addMessage({
+            isPrompt: false,
+            message:
+              "Sorry, I was unable to generate a response. Please try again.",
+          })
         );
       setLoading(false);
     }
@@ -66,71 +68,20 @@ export default function App() {
       </div>
 
       <section className="main-container">
+        {conversation.length === 0 && <HeroSection />}
+
         <section className="main-section">
-          <div className="command-container">
-            {command && <div className="command">{command}</div>}
-          </div>
+          {conversation.map((message, index) => {
+            return message.isPrompt ? (
+              <Prompt key={index} command={message.message} />
+            ) : (
+              <Response key={index} response={message.message} />
+            );
+          })}
 
-          {loading && (
-            <div className="response">
-              <div className="nexai-response">
-                <img className="nexai-logo" src={nex} alt="" />
-                <div className="nexai-text">NexAI</div>
-              </div>
-              <img
-                className="loading-icon"
-                src="https://chatbot.rediff.com/public/typing.gif"
-                alt="Loading..."
-              />
-            </div>
-          )}
+          {loading && <ResponseLoading />}
 
-          {response && (
-            <div className="response">
-              <div className="nexai-response">
-                <img className="nexai-logo" src={nex} alt="" />
-                <div className="nexai-text">NexAI</div>
-              </div>
-
-              <Markdown
-                className="response-markdown"
-                children={response}
-                components={{
-                  code(props) {
-                    const { children, className, node, ...rest } = props;
-                    const match = /language-(\w+)/.exec(className || "");
-                    return match ? (
-                      <SyntaxHighlighter
-                        {...rest}
-                        PreTag="div"
-                        children={String(children).replace(/\n$/, "")}
-                        language={match[1]}
-                        style={twilight}
-                      />
-                    ) : (
-                      <code {...rest} className={className}>
-                        {children}
-                      </code>
-                    );
-                  },
-                }}
-              />
-            </div>
-          )}
-
-          <form className="form" onSubmit={sendRequest}>
-            <div className="user-input">
-              <input
-                className="textbox"
-                ref={inputRef}
-                type="text"
-                placeholder="Ask me anything..."
-              />
-              <button className="send-button" type="submit">
-                <span className="material-symbols-outlined">send</span>
-              </button>
-            </div>
-          </form>
+          <InputBox sendRequest={sendRequest} inputRef={inputRef} />
         </section>
       </section>
     </main>
