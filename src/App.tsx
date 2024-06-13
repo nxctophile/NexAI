@@ -10,6 +10,7 @@ import HeroSection from "./components/HeroSection";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import { addMessage } from "./redux/conversation/conversationSlice";
+import { setSong } from "./redux/conversation/songInfoSlice";
 
 export default function App() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,30 +28,75 @@ export default function App() {
     inputRef.current.value = "";
 
     if (prompt.length > 0) {
-      dispatch(addMessage({ isPrompt: true, message: prompt }));
-      setLoading(true);
-      const generatedResponse = await fetch(
-        `http://localhost:8080?prompt=${prompt}`
-      );
 
-      const parsedGeneratedResponse = await generatedResponse.json();
-      console.log(parsedGeneratedResponse);
-      dispatch(
-        addMessage({
-          isPrompt: false,
-          message: parsedGeneratedResponse.response,
-        })
-      );
+      if (prompt.toLowerCase().includes("play") && prompt.toLowerCase().includes("rhythmie")) {
+        dispatch(addMessage({ isPrompt: true, message: prompt }));
+        setLoading(true);
 
-      if (!generatedResponse.ok)
+        const filteredQuery = prompt.toLowerCase().split("play")[1].split("on rhythmie")[0].trim();
+        console.log("FQ: ", filteredQuery);
+
+        const generatedResults = await fetch(
+          `https://rhythmie-api.vercel.app/api/search?query=${filteredQuery}`
+        );
+
+        const parsedGeneratedResults = await generatedResults.json();
+
+        const currentSong = parsedGeneratedResults.data.songs.results[0];
+
+        const generatedResponse = await fetch(
+          `https://rhythmie-api.vercel.app/api/songs/${currentSong.id}`
+        );
+
+        const parsedGeneratedResponse = await generatedResponse.json();
+
+        dispatch(setSong(parsedGeneratedResponse));
+
         dispatch(
           addMessage({
             isPrompt: false,
-            message:
-              "Sorry, I was unable to generate a response. Please try again.",
+            message: `Playing ${currentSong.title} by ${currentSong.primaryArtists} on Rhythmie`,
           })
         );
-      setLoading(false);
+        
+        console.log(parsedGeneratedResponse);
+
+        if (!generatedResults.ok || !generatedResponse.ok)
+          dispatch(
+            addMessage({
+              isPrompt: false,
+              message:
+                "Sorry, I was unable to generate a response. Please try again.",
+            })
+          );
+        setLoading(false);
+
+      } else {
+        dispatch(addMessage({ isPrompt: true, message: prompt }));
+        setLoading(true);
+        const generatedResponse = await fetch(
+          `http://localhost:8080?prompt=${prompt}`
+        );
+
+        const parsedGeneratedResponse = await generatedResponse.json();
+        console.log(parsedGeneratedResponse);
+        dispatch(
+          addMessage({
+            isPrompt: false,
+            message: parsedGeneratedResponse.response,
+          })
+        );
+
+        if (!generatedResponse.ok)
+          dispatch(
+            addMessage({
+              isPrompt: false,
+              message:
+                "Sorry, I was unable to generate a response. Please try again.",
+            })
+          );
+        setLoading(false);
+      }
     }
   };
 

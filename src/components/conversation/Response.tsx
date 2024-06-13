@@ -1,11 +1,16 @@
 import Markdown from "react-markdown";
-import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { twilight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import nex from "/nex-white-stroke-100.png";
+import RhythmieComponent from "../music/RhythmieComponent";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 export default function Response(props: {
   response: string | null | undefined;
 }) {
+  const song = useSelector((state: RootState) => state.songInfo.value);
+
   return (
     <div className="response">
       <div className="nexai-response">
@@ -36,6 +41,8 @@ export default function Response(props: {
           },
         }}
       />
+      
+      {song && <RhythmieComponent song={song} />}
     </div>
   );
 }

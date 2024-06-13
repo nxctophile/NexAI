@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import conversationReducer from "./conversation/conversationSlice";
+import songInfoReducer from "./conversation/songInfoSlice";
 
 export const store = configureStore({
   reducer: {
     conversation: conversationReducer,
+    songInfo: songInfoReducer,
   },
 });
 
