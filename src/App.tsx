@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import "./styles/App.css";
 import Sidebar from "./components/Sidebar";
 import account from "./assets/account.png";
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import { addMessage } from "./redux/conversation/conversationSlice";
 import { setSong } from "./redux/conversation/songInfoSlice";
+import RhythmieSuggestion from "./components/suggestions/RhythmieSuggestion";
+import { clearSuggestion } from "./redux/conversation/suggestionStateSlice";
 
 export default function App() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,14 +20,24 @@ export default function App() {
   const conversation = useSelector(
     (state: RootState) => state.conversation.value
   );
+
+  const suggestionState = useSelector((state: RootState) => state.suggestionState.value);
+
   const dispatch = useDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  const mainSectionRef = useRef(null);
+
+  useEffect(() => {
+    mainSectionRef.current.scrollTop = mainSectionRef.current.scrollHeight;
+  }, [conversation]);
 
   const sendRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const prompt = inputRef.current?.value ?? "";
     inputRef.current.value = "";
+    dispatch(clearSuggestion());
 
     if (prompt.length > 0) {
 
@@ -116,7 +128,7 @@ export default function App() {
       <section className="main-container">
         {conversation.length === 0 && <HeroSection />}
 
-        <section className="main-section">
+        <section ref={mainSectionRef} className="main-section">
           {conversation.map((message, index) => {
             return message.isPrompt ? (
               <Prompt key={index} command={message.message} />
@@ -126,6 +138,9 @@ export default function App() {
           })}
 
           {loading && <ResponseLoading />}
+
+
+          {suggestionState === 'rhythmie' && <RhythmieSuggestion />}
 
           <InputBox sendRequest={sendRequest} inputRef={inputRef} />
         </section>

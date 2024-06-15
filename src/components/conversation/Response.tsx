@@ -5,11 +5,23 @@ import nex from "/nex-white-stroke-100.png";
 import RhythmieComponent from "../music/RhythmieComponent";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useEffect, useRef } from "react";
 
 export default function Response(props: {
   response: string | null | undefined;
 }) {
-  const song = useSelector((state: RootState) => state.songInfo.value);
+
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const equalityFunction = (prev, next) => {
+    return true;
+  }
+
+  const song = useSelector((state: RootState) => state.songInfo.value, equalityFunction);
+
+  useEffect(() => {
+    if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [props.response]);
 
   return (
     <div className="response">
@@ -34,7 +46,7 @@ export default function Response(props: {
                 style={twilight}
               />
             ) : (
-              <code {...rest} className={className}>
+              <code {...rest} className={`${className} code-block`}>
                 {children}
               </code>
             );
@@ -42,7 +54,9 @@ export default function Response(props: {
         }}
       />
       
-      {song && <RhythmieComponent song={song} />}
+      {(song && props.response?.includes('Rhythmie')) && <RhythmieComponent song={song} />}
+
+      <div ref={bottomRef} className="bottom"></div>
     </div>
   );
 }

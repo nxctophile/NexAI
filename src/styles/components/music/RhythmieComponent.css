@@ -93,13 +93,14 @@
 	height: 3px;
 	width: 100%;
 	z-index: 2;
-	transition: 0.2s;
+	transition: .3s;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
 .seekbar {
+    cursor: pointer;
 	-webkit-appearance: none;
 	width: 100%;
 	height: 100%;
@@ -112,12 +113,15 @@
 .seekbar::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	user-select: none;
-	height: 20px;
+	height: 2em;
 	width: 0;
 	background: #000;
 	box-shadow: -100vw 0 0 100vw #8b42ff;
 }
 
+.total-seek:hover {
+    height: 4px;
+}
 
 .goto-rhythmie-container {
     display: flex;

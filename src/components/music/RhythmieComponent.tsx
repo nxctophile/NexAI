@@ -1,78 +1,80 @@
 import "../../styles/components/music/RhythmieComponent.css";
 import pauseButton from "../../assets/Rhythmie/pause-buttonx32.png";
 import playButton from "../../assets/Rhythmie/play-buttonx32.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function RhythmieComponent({ song }) {
-  const url = `https://rhythmie.live/browse?id=${song.data[0].id}`;
-  const audio = document.getElementById("audio");
-  const seekbar = document.getElementById("seekbar");
+  const url = `https://rhythmie.live/browse/song?id=${song.data[0].id}`;
+  // const audio = document.getElementById("audio");
+  // const seekbar = document.getElementById("seekbar");
+  const [playState, setPlayState] = useState(true);
 
-  let playState = true;
-  let currentAudioSrc;
-  let currentDuration;
-  let totalDuration = song.data[0];
+  const audioRef = useRef(undefined);
+  const seekbarRef = useRef(undefined);
 
-  const [songButton, setSongButton] = useState(playButton);
+
+let currentAudioSrc;
+let currentDuration;
+let totalDuration = song.data[0].duration;
+
+const [songButton, setSongButton] = useState(playButton);
 
 let interval: ReturnType<typeof setInterval>;
 
 const updateSeek = () => {
-    playPause();
-    if (currentElement) currentElement.currentTime = Number(seekbar.value);
+  if (audioRef.current) audioRef.current.currentTime = Number(seekbarRef.current.value);
 };
 
-  const playPause = () => {
-    if (playState) {
-      audio
-        .play()
-        .then(() => {
-          interval = setInterval(() => {
-            seekbar.value = String(audio.currentTime);
+const playPause = () => {
+  const audio = audioRef.current;
+  const seekbar = seekbarRef.current;
+  if (playState) {
+    audio
+      .play()
+      .then(() => {
+        interval = setInterval(() => {
+          seekbar.value = String(audio.currentTime);
 
-            if (audio.currentTime >= totalDuration) {
-              clearInterval(interval);
-              playState = false;
-              playPause();
-              playState = true;
-            }
-          }, 500);
+          if (audio.currentTime >= totalDuration) {
+            clearInterval(interval);
+            setPlayState(false);
+            setSongButton(playButton);
+          }
+        }, 500);
 
-          playState = false;
-          setSongButton(pauseButton);
-        })
-        .catch((error) => {
-          console.error("currentElement play failed:", error);
-        });
-    } else {
-      audio.pause();
-      // clearInterval(interval);
-      playState = true;
-      setSongButton(playButton);
-    }
-  };
+        setPlayState(false);
+        setSongButton(pauseButton);
+      })
+      .catch((error) => {
+        console.error("currentElement play failed:", error);
+      });
+  } else {
+    audio.pause();
+    clearInterval(interval); // Clear the interval when pausing
+    setPlayState(true);
+    setSongButton(playButton);
+  }
+};
 
-  useEffect(() => {
-    if (audio && song.data[0].downloadUrl[2].url !== currentAudioSrc) {
-      playState = true;
-      currentAudioSrc = song.data[0].downloadUrl[2].url;
-      audio.src = currentAudioSrc; // Set the new audio source
-      audio.load(); // Load the new audio source
-      console.log(2);
+useEffect(() => {
+  const audio = audioRef.current;
+  if (audio && song.data[0].downloadUrl[2].url !== currentAudioSrc) {
+    setPlayState(true);
+    currentAudioSrc = song.data[0].downloadUrl[2].url;
+    audio.src = currentAudioSrc; // Set the new audio source
+    audio.load(); // Load the new audio source
 
-      audio.oncanplay = () => {
-        // Play the audio when it is ready to play
-        console.log(3);
-        playPause();
-      };
-    }
-  }, [audio]);
+    audio.oncanplay = () => {
+      playPause();
+    };
+  }
+}, [audioRef, song]);
 
   return (
     <section className="rhythmie-container">
       {song.data[0] && (
         <>
-          <audio id="audio" src={song.data[0].downloadUrl[2].url}></audio>
+          <audio ref={audioRef} id="audio" src={song.data[0].downloadUrl[2].url}></audio>
           <div
             style={{ backgroundImage: `url(${song.data[0].image[2].url})` }}
             className="rhythmie"
@@ -91,6 +93,7 @@ const updateSeek = () => {
 
             <div className="total-seek">
                 <input
+                    ref={seekbarRef}
                     id="seekbar"
                     onInput={updateSeek}
                     className="seekbar"
