@@ -100,7 +100,7 @@ export default function App() {
           dispatch(addMessage({ isPrompt: true, message: prompt }));
           setLoading(true);
           const generatedResponse = await fetch(
-            `http://localhost:8080?prompt=${prompt}`
+            `http://nexai-server.vercel.app/api?prompt=${prompt}`
           );
 
           const parsedGeneratedResponse = await generatedResponse.json();
