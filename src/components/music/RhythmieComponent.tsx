@@ -14,7 +14,6 @@ export default function RhythmieComponent({ song }) {
 
 
 let currentAudioSrc;
-let currentDuration;
 let totalDuration = song.data[0].duration;
 
 const [songButton, setSongButton] = useState(playButton);

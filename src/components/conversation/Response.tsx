@@ -5,23 +5,35 @@ import nex from "/nex-white-stroke-100.png";
 import RhythmieComponent from "../music/RhythmieComponent";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
-export default function Response(props: {
-  response: string | null | undefined;
-}) {
-
+export default function Response({ response }) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const copiedCodeRef = useRef<HTMLDivElement>(null);
 
-  const equalityFunction = (prev, next) => {
+  const equalityFunction = () => {
     return true;
-  }
+  };
 
-  const song = useSelector((state: RootState) => state.songInfo.value, equalityFunction);
+  const song = useSelector(
+    (state: RootState) => state.songInfo.value,
+    equalityFunction
+  );
+
+  const handleCopy = useCallback((code: string) => {
+    navigator.clipboard.writeText(code);
+    if (copiedCodeRef.current) {
+      copiedCodeRef.current.style.opacity = "1";
+      setTimeout(() => {
+        copiedCodeRef.current.style.opacity = "0";
+      }, 1000);
+    }
+  }, []);
 
   useEffect(() => {
-    if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [props.response]);
+    if (bottomRef.current)
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [response]);
 
   return (
     <div className="response">
@@ -32,29 +44,70 @@ export default function Response(props: {
 
       <Markdown
         className="response-markdown"
-        children={props.response}
+        children={response}
         components={{
           code(props) {
-            const { children, className, node, ...rest } = props;
+            const { children, className, ...rest } = props;
             const match = /language-(\w+)/.exec(className || "");
             return match ? (
-              <SyntaxHighlighter
-                {...rest}
-                PreTag="div"
-                children={String(children).replace(/\n$/, "")}
-                language={match[1]}
-                style={twilight}
-              />
+              <>
+                <div className="code-actions">
+                  <button
+                    onClick={() =>
+                      handleCopy(String(children).replace(/\n$/, ""))
+                    }
+                    className="copy-button"
+                  >
+                    <span className="material-symbols-outlined">
+                      content_copy
+                    </span>
+                  </button>
+                  <div ref={copiedCodeRef} className="copied-code">
+                    <span className="material-symbols-outlined">check</span>
+                    Copied to clipboard
+                  </div>
+                </div>
+                {/* @ts-expect-error - Adding this line to remove the unnecessary type warning*/}
+                <SyntaxHighlighter
+                  {...rest}
+                  PreTag="div"
+                  children={String(children).replace(/\n$/, "")}
+                  language={match[1]}
+                  style={twilight}
+                  className="code-block"
+                />
+              </>
             ) : (
-              <code {...rest} className={`${className} code-block`}>
+              <code {...rest} className={className}>
                 {children}
               </code>
             );
           },
         }}
       />
-      
-      {(song && props.response?.includes('Rhythmie')) && <RhythmieComponent song={song} />}
+
+      {song && response?.includes("Rhythmie") && (
+        <RhythmieComponent song={song} />
+      )}
+
+      <div className="response-actions">
+        <button
+          onClick={() => handleCopy(response)}
+          className="response-action response-copy-button"
+        >
+          <span className="material-symbols-outlined">content_copy</span>
+        </button>
+        <button className="response-action response-regenerate-button">
+          <span className="material-symbols-outlined">sync</span>
+        </button>
+        <button className="response-action response-report-button">
+          <span className="material-symbols-outlined">report</span>
+        </button>
+        <div ref={copiedCodeRef} className="copied-code">
+          <span className="material-symbols-outlined">check</span>
+          Copied to clipboard
+        </div>
+      </div>
 
       <div ref={bottomRef} className="bottom"></div>
     </div>

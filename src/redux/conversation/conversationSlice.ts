@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+interface conversationType {
+  isPrompt: boolean;
+  message: string;
+}
+
 export interface ConversationState {
   value: Array<object>;
 }
@@ -13,7 +18,7 @@ export const conversationSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
-    addMessage: (state, action: PayloadAction<object>) => {
+    addMessage: (state, action: PayloadAction<conversationType>) => {
       state.value.push(action.payload);
     },
     clearMessages: (state) => {

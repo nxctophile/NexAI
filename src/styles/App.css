@@ -61,6 +61,14 @@
     padding: 1em;
 }
 
+.response:hover > .response-actions {
+  opacity: 1;
+}
+
+.prompt-container:hover > .prompt-actions {
+  opacity: 1;
+}
+
 .prompt-container {
   display: flex;
   justify-content: flex-end;
@@ -69,8 +77,9 @@
 
 .prompt {
   background: #333;
-  border-radius: 20rem;
+  border-radius: 2rem;
   padding: .8em 1.2em;
+  max-width: 70%;
 }
 
 .response {
@@ -91,6 +100,138 @@
   font-size: 1rem;
   font-weight: 600;
   margin-left: .4em;
+}
+
+.response-actions {
+  opacity: 0;
+  display: flex;
+  margin-left: -.4em;
+  margin-top: -.4em;
+}
+
+.response-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: .6em;
+  padding: 0 .4em;
+}
+
+.response-action:hover {
+  cursor: pointer;
+  background: #333;
+}
+
+.response-action:hover > span {
+  color: #aaa;
+}
+
+.response-action > span {
+  font-size: 1.2rem;
+  color: #999;
+}
+
+.prompt-actions {
+  z-index: 4;
+  opacity: 0;
+  display: flex;
+  margin-right: .7em;
+}
+
+.prompt-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: .6em;
+  padding: .4em .4em;
+  height: fit-content;
+}
+
+.prompt-action:hover {
+  cursor: pointer;
+  background: #333;
+}
+
+.prompt-action:hover > span {
+  color: #aaa;
+}
+
+.prompt-action > span {
+  font-size: 1.2rem;
+  color: #999;
+}
+
+
+.copied-prompt {
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: .8rem;
+  margin-right: 1em;
+  border: 1px solid #7b7;
+  border-radius: 20rem;
+  padding: .5em 1em;
+  opacity: 0;
+  transition: .3s;
+  text-wrap: nowrap;
+}
+
+.copied-prompt > span {
+  font-size: 1.2rem;
+  margin-left: -.2em;
+  margin-right: .3em;
+}
+
+
+.code-actions {
+  display: flex;
+  float: right;
+  margin-left: .5em;
+}
+
+.copy-button {
+  display: flex;
+  background: none;
+  border: none;
+  border-radius: 20rem;
+  padding: .5em;
+}
+
+.copy-button:hover {
+  cursor: pointer;
+  background: #333;
+}
+
+.copy-button:hover > span {
+  color: #ddd;
+}
+
+.copy-button > span {
+  font-size: 1.3rem;
+  color: #aaa;
+}
+
+.copied-code {
+  display: flex;
+  font-size: .8rem;
+  margin-left: 1em;
+  margin-right: -14.8em;
+  border: 1px solid #7b7;
+  border-radius: 20rem;
+  padding: .5em 1em;
+  opacity: 0;
+  transition: .3s;
+}
+
+.copied-code > span {
+  font-size: 1.2rem;
+  margin-left: -.2em;
+  margin-right: .3em;
 }
 
 .form {
