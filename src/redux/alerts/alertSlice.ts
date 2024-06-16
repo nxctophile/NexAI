@@ -1,16 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { AlertType } from "../../types/types";
+import { AlertContext } from "../../types/reduxTypes";
 
-interface AlertContext {
-  icon: string;
-  message: string;
-}
-
-export interface AlertState {
-  value: AlertContext;
-}
-
-const initialState: AlertState = {
+const initialState: AlertContext = {
   value: {
     icon: "",
     message: "",
@@ -21,7 +14,7 @@ export const alertSlice = createSlice({
   name: "alert",
   initialState,
   reducers: {
-    setAlertMessage: (state, action: PayloadAction<AlertContext>) => {
+    setAlertMessage: (state, action: PayloadAction<AlertType>) => {
       state.value = action.payload;
     },
   },

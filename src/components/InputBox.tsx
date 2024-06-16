@@ -1,27 +1,25 @@
-import React, { FormEvent } from 'react';
-import { useDispatch } from 'react-redux';
-import { clearSuggestion, setSuggestion } from '../redux/conversation/suggestionStateSlice';
+import { useDispatch } from "react-redux";
+import {
+  clearSuggestion,
+  setSuggestion,
+} from "../redux/suggestions/suggestionStateSlice";
+import { InputBoxPropsType } from "../types/types";
 
-interface InputBoxProps {
-  sendRequest: (event: FormEvent<HTMLFormElement>) => Promise<void>;
-  inputRef: React.RefObject<HTMLInputElement>;
-}
-
-export default function InputBox(props: InputBoxProps) {
+export default function InputBox({ sendRequest, inputRef }: InputBoxPropsType) {
   const dispatch = useDispatch();
-  const showSuggestion = (event) => {
-    if (event.target.value.toLowerCase().includes('play')) {
-      dispatch(setSuggestion('rhythmie'));
+  const showSuggestion = (event: { target: { value: string } }) => {
+    if (event.target.value.toLowerCase().includes("play")) {
+      dispatch(setSuggestion("rhythmie"));
     } else {
       dispatch(clearSuggestion());
     }
-  }
+  };
   return (
-    <form className="form" onSubmit={props.sendRequest}>
+    <form className="form" onSubmit={sendRequest}>
       <div className="user-input">
         <input
           className="textbox"
-          ref={props.inputRef}
+          ref={inputRef}
           type="text"
           placeholder="Ask me anything..."
           onChange={showSuggestion}

@@ -1,24 +1,13 @@
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import { useEffect, useRef, useCallback } from "react";
+import { CommandType } from "../../types/types";
 
-export default function Prompt(props: {
-  command:
-    | string
-    | number
-    | boolean
-    | ReactElement<any, string | JSXElementConstructor<any>>
-    | Iterable<ReactNode>
-    | ReactPortal
-    | null
-    | undefined;
-}) {
+/**
+ * Renders a prompt component with copy functionality and automatic scrolling to the latest command.
+ * @param {CommandType} props Contains the command to display and interact with in the prompt.
+ * @returns {JSX.Element} A JSX element representing the prompt interface.
+ */
+
+export default function Prompt({ command }: CommandType) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const copiedTextRef = useRef<HTMLDivElement>(null);
 
@@ -27,7 +16,7 @@ export default function Prompt(props: {
     if (copiedTextRef.current) {
       copiedTextRef.current.style.opacity = "1";
       setTimeout(() => {
-        copiedTextRef.current.style.opacity = "0";
+        if (copiedTextRef.current) copiedTextRef.current.style.opacity = "0";
       }, 1000);
     }
   }, []);
@@ -35,7 +24,7 @@ export default function Prompt(props: {
   useEffect(() => {
     if (bottomRef.current)
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [props.command]);
+  }, [command]);
 
   return (
     <div className="prompt-container">
@@ -45,7 +34,7 @@ export default function Prompt(props: {
           Copied to clipboard
         </div>
         <button
-          onClick={() => handleCopy(props.command)}
+          onClick={() => handleCopy(command)}
           className="prompt-action prompt-copy-button"
         >
           <span className="material-symbols-outlined">content_copy</span>
@@ -55,7 +44,7 @@ export default function Prompt(props: {
         </button>
       </div>
 
-      <div className="prompt">{props.command}</div>
+      <div className="prompt">{command}</div>
       <div ref={bottomRef} className="bottom" />
     </div>
   );

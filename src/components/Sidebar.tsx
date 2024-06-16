@@ -1,10 +1,11 @@
 import "../styles/Sidebar.css";
-import arrow from "../assets/arrow.png";
+
 import { useDispatch } from "react-redux";
 import { clearMessages } from "../redux/conversation/conversationSlice";
 
-export default function Sidebar() {
+import arrow from "../assets/arrow.png";
 
+export default function Sidebar() {
   const dispatch = useDispatch();
 
   return (

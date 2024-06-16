@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import conversationReducer from "./conversation/conversationSlice";
-import songInfoReducer from "./conversation/songInfoSlice";
-import suggestionStateReducer from "./conversation/suggestionStateSlice";
+import songInfoReducer from "./music/songInfoSlice";
+import suggestionStateReducer from "./suggestions/suggestionStateSlice";
 import alertReducer from "./alerts/alertSlice";
 
 export const store = configureStore({

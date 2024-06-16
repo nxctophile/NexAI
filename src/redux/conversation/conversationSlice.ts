@@ -1,24 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { ConversationContext } from "../../types/reduxTypes";
+import { ConversationType } from "../../types/types";
 
-interface conversationType {
-  isPrompt: boolean;
-  message: string;
-}
-
-export interface ConversationState {
-  value: Array<object>;
-}
-
-const initialState: ConversationState = {
+const initialState: ConversationContext = {
   value: [],
 };
 
 export const conversationSlice = createSlice({
-  name: "counter",
+  name: "conversation",
   initialState,
   reducers: {
-    addMessage: (state, action: PayloadAction<conversationType>) => {
+    addMessage: (state, action: PayloadAction<ConversationType>) => {
       state.value.push(action.payload);
     },
     clearMessages: (state) => {

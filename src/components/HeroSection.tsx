@@ -1,4 +1,4 @@
-import '../styles/components/HeroSection.css';
+import "../styles/components/HeroSection.css";
 import nex from "/nex-white-stroke-100.png";
 import code from "../assets/code.png";
 import idea from "../assets/idea.png";
@@ -6,18 +6,14 @@ import quote from "../assets/quote.png";
 import question from "../assets/question.png";
 
 export default function HeroSection() {
-
-
   return (
     <section className="hero-section">
       <div className="branding">
         <img src={nex} alt="NexAI" />
         <div className="brand-name">NexAI</div>
-        <div className="subtitle">
-            How can I help you today?
-        </div>
+        <div className="subtitle">How can I help you today?</div>
       </div>
-      
+
       <form className="action-container">
         <button type="submit" className="action">
           <img className="action-icon" src={question} alt="Question" />

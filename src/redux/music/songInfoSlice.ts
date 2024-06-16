@@ -1,19 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { SongInfoContext } from "../../types/reduxTypes";
+import { SongType } from "../../types/types";
 
-export interface SongInfoState {
-  value: object | undefined;
-}
-
-const initialState: SongInfoState = {
+const initialState: SongInfoContext = {
   value: undefined,
 };
 
 export const songInfoSlice = createSlice({
-  name: "counter",
+  name: "song",
   initialState,
   reducers: {
-    setSong: (state, action: PayloadAction<object>) => {
+    setSong: (state, action: PayloadAction<SongType>) => {
       state.value = action.payload;
     },
   },

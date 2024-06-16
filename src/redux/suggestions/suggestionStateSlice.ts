@@ -1,11 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-export interface SuggestionState {
-  value: string;
-}
-
-const initialState: SuggestionState = {
+import { SuggestionContext } from "../../types/reduxTypes";
+const initialState: SuggestionContext = {
   value: '',
 };
 

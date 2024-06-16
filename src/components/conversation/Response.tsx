@@ -6,8 +6,9 @@ import RhythmieComponent from "../music/RhythmieComponent";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useCallback, useEffect, useRef } from "react";
+import { ResponseType } from "../../types/types";
 
-export default function Response({ response }) {
+export default function Response({ response }: ResponseType) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const copiedCodeRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +26,7 @@ export default function Response({ response }) {
     if (copiedCodeRef.current) {
       copiedCodeRef.current.style.opacity = "1";
       setTimeout(() => {
-        copiedCodeRef.current.style.opacity = "0";
+        if (copiedCodeRef.current) copiedCodeRef.current.style.opacity = "0";
       }, 1000);
     }
   }, []);

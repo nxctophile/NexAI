@@ -10,9 +10,9 @@ import HeroSection from "./components/HeroSection";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import { addMessage } from "./redux/conversation/conversationSlice";
-import { setSong } from "./redux/conversation/songInfoSlice";
+import { setSong } from "./redux/music/songInfoSlice";
 import RhythmieSuggestion from "./components/suggestions/RhythmieSuggestion";
-import { clearSuggestion } from "./redux/conversation/suggestionStateSlice";
+import { clearSuggestion } from "./redux/suggestions/suggestionStateSlice";
 
 interface conversationType {
   isPrompt: boolean;
@@ -22,7 +22,7 @@ interface conversationType {
 export default function App() {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const conversation: conversationType = useSelector(
+  const conversation: conversationType[] = useSelector(
     (state: RootState) => state.conversation.value
   );
 

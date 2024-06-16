@@ -1,10 +1,6 @@
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
-
-interface AlertContext {
-    icon: string,
-    message: string
-}
+import { AlertType } from "../../types/types";
 
 /**
  * Renders an alert component on the page.
@@ -13,8 +9,9 @@ interface AlertContext {
  */
 
 export default function Alert() {
-
-  const alert: AlertContext = useSelector((state: RootState) => state.alert.value);
+  const alert: AlertType = useSelector(
+    (state: RootState) => state.alert.value
+  );
 
   return (
     <div className="alert">
