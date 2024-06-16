@@ -19,7 +19,6 @@ export interface ResponseType {
 }
 
 export interface SongType {
-  song: {
     data: [
       {
         id: string;
@@ -56,7 +55,6 @@ export interface SongType {
         duration: number;
       }
     ];
-  };
 }
 
 export interface InputBoxPropsType {

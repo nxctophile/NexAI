@@ -110,7 +110,7 @@ export default function Response({ response }: ResponseType) {
         </div>
       </div>
 
-      <div ref={bottomRef} className="bottom"></div>
+      <div ref={bottomRef} className="bottom" />
     </div>
   );
 }

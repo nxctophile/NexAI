@@ -11,7 +11,7 @@ import { SongType } from "../../types/types";
  * @returns The component returns a section element containing the song player UI.
  */
 
-export default function RhythmieComponent({ song }: SongType) {
+export default function RhythmieComponent({ song }: { song: SongType }) {
   const [playState, setPlayState] = useState(true);
   const [songButton, setSongButton] = useState(playButton);
 

@@ -1,4 +1,4 @@
-import { ConversationType } from "./types";
+import { ConversationType, SongType } from "./types";
 
 export interface AlertContext {
   value: {
@@ -12,7 +12,7 @@ export interface ConversationContext {
 }
 
 export interface SongInfoContext {
-  value: object | undefined;
+  value: SongType;
 }
 
 export interface SuggestionContext {

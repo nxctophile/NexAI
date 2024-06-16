@@ -1,10 +1,47 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { SongInfoContext } from "../../types/reduxTypes";
 import { SongType } from "../../types/types";
+import { SongInfoContext } from "../../types/reduxTypes";
 
 const initialState: SongInfoContext = {
-  value: undefined,
+  value: {
+      data: [
+        {
+          id: "",
+          name: "",
+          artists: {
+            primary: [
+              {
+                name: "",
+              },
+            ],
+          },
+          image: [
+            {
+              url: "",
+            },
+            {
+              url: "",
+            },
+            {
+              url: "",
+            },
+          ],
+          downloadUrl: [
+            {
+              url: "",
+            },
+            {
+              url: "",
+            },
+            {
+              url: "",
+            },
+          ],
+          duration: 0,
+        },
+      ],
+  },
 };
 
 export const songInfoSlice = createSlice({
