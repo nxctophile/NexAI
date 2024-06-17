@@ -263,6 +263,11 @@
   background: #171717;
   font-size: 1rem;
   padding: 0 1em;
+  transition: .2s;
+}
+
+.textbox:focus {
+  border-color: #777;
 }
 
 .send-button {
@@ -279,4 +284,18 @@
 
 .send-button:hover {
   background: #333;
+}
+
+.warning-text {
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: .6em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.warning-text > span {
+  font-size: 0.9rem;
+  color: #777;
+  margin-right: .2em;
 }

@@ -10,12 +10,15 @@ export interface ConversationType {
   message: string;
 }
 
-export interface CommandType {
-  command: string;
+export interface PromptComponentTypes {
+  command: string,
+  edit: () => void
 }
 
-export interface ResponseType {
-  response: string;
+export interface ResponseComponentTypes {
+  response: string,
+  regenerate: () => void,
+  report: () => void
 }
 
 export interface SongType {

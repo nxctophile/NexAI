@@ -1,13 +1,13 @@
 import { useEffect, useRef, useCallback } from "react";
-import { CommandType } from "../../types/types";
+import { PromptComponentTypes } from "../../types/types";
 
 /**
  * Renders a prompt component with copy functionality and automatic scrolling to the latest command.
- * @param {CommandType} props Contains the command to display and interact with in the prompt.
+ * @param {PromptComponentTypes} props Contains the command to display and interact with in the prompt.
  * @returns {JSX.Element} A JSX element representing the prompt interface.
  */
 
-export default function Prompt({ command }: CommandType) {
+export default function Prompt({ command, edit }: PromptComponentTypes) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const copiedTextRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +39,7 @@ export default function Prompt({ command }: CommandType) {
         >
           <span className="material-symbols-outlined">content_copy</span>
         </button>
-        <button className="prompt-action prompt-report-button">
+        <button onClick={edit} className="prompt-action prompt-report-button">
           <span className="material-symbols-outlined">edit</span>
         </button>
       </div>

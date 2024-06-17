@@ -18,3 +18,7 @@ export interface SongInfoContext {
 export interface SuggestionContext {
   value: string;
 }
+
+export interface ResponseLoadingContext {
+  value: boolean;
+}

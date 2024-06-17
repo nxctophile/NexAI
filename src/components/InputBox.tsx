@@ -28,6 +28,10 @@ export default function InputBox({ sendRequest, inputRef }: InputBoxPropsType) {
           <span className="material-symbols-outlined">send</span>
         </button>
       </div>
+      <div className="warning-text">
+        <span className="material-symbols-outlined">info</span>
+        NexAI is based on artificial intelligence and may make mistakes.
+      </div>
     </form>
   );
 }

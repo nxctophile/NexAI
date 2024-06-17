@@ -5,13 +5,23 @@ import nex from "/nex-white-stroke-100.png";
 import RhythmieComponent from "../music/RhythmieComponent";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { useCallback, useEffect, useRef } from "react";
-import { ResponseType } from "../../types/types";
+import { useEffect, useRef } from "react";
+import { ResponseComponentTypes } from "../../types/types";
 
-export default function Response({ response }: ResponseType) {
+/**
+ * Renders the response component with various interactive elements including copy to clipboard functionality, dynamic markdown rendering, and optional integration with the RhythmieComponent based on the response content.
+ * @param {ResponseComponentTypes} props - The properties passed to the Response component, including the response to be displayed.
+ * @returns The Response component populated with the provided response content, interactive elements, and potentially the RhythmieComponent.
+ */
+
+export default function Response({ response, regenerate, report }: ResponseComponentTypes) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const copiedCodeRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Equality function for useSelector to avoid unnecessary re-renders.
+   * @returns {boolean} Always returns true indicating equality.
+   */
   const equalityFunction = () => {
     return true;
   };
@@ -21,15 +31,22 @@ export default function Response({ response }: ResponseType) {
     equalityFunction
   );
 
-  const handleCopy = useCallback((code: string) => {
-    navigator.clipboard.writeText(code);
-    if (copiedCodeRef.current) {
-      copiedCodeRef.current.style.opacity = "1";
-      setTimeout(() => {
-        if (copiedCodeRef.current) copiedCodeRef.current.style.opacity = "0";
-      }, 1000);
-    }
-  }, []);
+  /**
+   * Copies the provided text to the clipboard and temporarily updates the UI to reflect the copy action.
+   * @param {string} code The text to be copied to the clipboard.
+   */
+  const handleCopy = (code: string) => {
+    return () => {
+        navigator.clipboard.writeText(code);
+        if (copiedCodeRef.current) {
+          copiedCodeRef.current.style.opacity = "1";
+          setTimeout(() => {
+            if (copiedCodeRef.current)
+              copiedCodeRef.current.style.opacity = "0";
+          }, 1000);
+        }
+    };
+  };
 
   useEffect(() => {
     if (bottomRef.current)
@@ -45,7 +62,6 @@ export default function Response({ response }: ResponseType) {
 
       <Markdown
         className="response-markdown"
-        children={response}
         components={{
           code(props) {
             const { children, className, ...rest } = props;
@@ -54,9 +70,7 @@ export default function Response({ response }: ResponseType) {
               <>
                 <div className="code-actions">
                   <button
-                    onClick={() =>
-                      handleCopy(String(children).replace(/\n$/, ""))
-                    }
+                    onClick={handleCopy(String(children).replace(/\n$/, ""))}
                     className="copy-button"
                   >
                     <span className="material-symbols-outlined">
@@ -72,11 +86,12 @@ export default function Response({ response }: ResponseType) {
                 <SyntaxHighlighter
                   {...rest}
                   PreTag="div"
-                  children={String(children).replace(/\n$/, "")}
                   language={match[1]}
                   style={twilight}
                   className="code-block"
-                />
+                >
+                  {String(children).replace(/\n$/, "")}
+                </SyntaxHighlighter>
               </>
             ) : (
               <code {...rest} className={className}>
@@ -85,7 +100,9 @@ export default function Response({ response }: ResponseType) {
             );
           },
         }}
-      />
+      >
+        {response}
+      </Markdown>
 
       {song && response?.includes("Rhythmie") && (
         <RhythmieComponent song={song} />
@@ -93,15 +110,15 @@ export default function Response({ response }: ResponseType) {
 
       <div className="response-actions">
         <button
-          onClick={() => handleCopy(response)}
+          onClick={handleCopy(response)}
           className="response-action response-copy-button"
         >
           <span className="material-symbols-outlined">content_copy</span>
         </button>
-        <button className="response-action response-regenerate-button">
+        <button onClick={regenerate} className="response-action response-regenerate-button">
           <span className="material-symbols-outlined">sync</span>
         </button>
-        <button className="response-action response-report-button">
+        <button onClick={report} className="response-action response-report-button">
           <span className="material-symbols-outlined">report</span>
         </button>
         <div ref={copiedCodeRef} className="copied-code">

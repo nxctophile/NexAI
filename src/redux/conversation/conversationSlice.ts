@@ -17,10 +17,16 @@ export const conversationSlice = createSlice({
     clearMessages: (state) => {
       state.value = [];
     },
+    setMessageAtIndex: (state, action) => {
+      const { isPrompt, message, index } = action.payload;
+      if (index !== undefined) {
+        state.value[index] = { isPrompt, message };
+      }
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addMessage, clearMessages } = conversationSlice.actions;
+export const { addMessage, clearMessages, setMessageAtIndex } = conversationSlice.actions;
 
 export default conversationSlice.reducer;

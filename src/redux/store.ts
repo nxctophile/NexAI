@@ -3,6 +3,7 @@ import conversationReducer from "./conversation/conversationSlice";
 import songInfoReducer from "./music/songInfoSlice";
 import suggestionStateReducer from "./suggestions/suggestionStateSlice";
 import alertReducer from "./alerts/alertSlice";
+import responseLoadingReducer from "./loading/ResponseLoading";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     songInfo: songInfoReducer,
     suggestionState: suggestionStateReducer,
     alert: alertReducer,
+    responseLoading: responseLoadingReducer,
   },
 });
 

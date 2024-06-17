@@ -10,6 +10,17 @@
     border-radius: 20rem;
     z-index: 10;
     box-shadow: 0 0 15px #111;
+    animation: suggestion .3s;
+}
+
+@keyframes suggestion {
+    from {
+        bottom: 0;
+        opacity: 0;
+    } to {
+        bottom: 10%;
+        opacity: 1;
+    }
 }
 
 .rhythmie-logo {
