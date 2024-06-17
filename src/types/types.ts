@@ -6,6 +6,7 @@ export interface AlertType {
 }
 
 export interface ConversationType {
+  isRegenerated: boolean;
   isPrompt: boolean;
   message: string;
 }
@@ -17,6 +18,7 @@ export interface PromptComponentTypes {
 
 export interface ResponseComponentTypes {
   response: string,
+  isRegenerated: boolean,
   regenerate: () => void,
   report: () => void
 }

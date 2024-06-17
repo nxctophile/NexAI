@@ -5,7 +5,7 @@ import {
 } from "../redux/conversation/conversationSlice";
 import { setSong } from "../redux/music/songInfoSlice";
 import { clearSuggestion } from "../redux/suggestions/suggestionStateSlice";
-import { setResponseLoading } from "../redux/loading/ResponseLoading";
+import { setResponseLoading } from "../redux/loading/responseLoading";
 import { Dispatch } from "@reduxjs/toolkit";
 import { ConversationType } from "../types/types";
 
@@ -14,10 +14,12 @@ export default function sendRequest(
   dispatch: Dispatch,
   conversation: ConversationType[],
   index: number | undefined = undefined,
-  event: FormEvent<HTMLFormElement> | undefined = undefined
+  event: FormEvent<HTMLFormElement> | undefined = undefined,
+  customPrompt: string | undefined = undefined,
 ) {
   return async () => {
     if (event) event.preventDefault();
+    let prompt: string;
 
     const generateResponse = async (prompt: string) => {
       dispatch(setResponseLoading(true));
@@ -33,7 +35,9 @@ export default function sendRequest(
     };
 
     if (inputRef.current) {
-      const prompt = inputRef.current?.value ?? "";
+      if (customPrompt) prompt = customPrompt;
+      else prompt = inputRef.current?.value ?? "";
+
       inputRef.current.value = "";
       dispatch(clearSuggestion());
 
@@ -42,7 +46,13 @@ export default function sendRequest(
           prompt.toLowerCase().includes("play") &&
           prompt.toLowerCase().includes("rhythmie")
         ) {
-          dispatch(addMessage({ isPrompt: true, message: prompt }));
+          dispatch(
+            addMessage({
+              isRegenerated: false,
+              isPrompt: true,
+              message: prompt,
+            })
+          );
           dispatch(setResponseLoading(true));
 
           const filteredQuery = prompt
@@ -67,6 +77,7 @@ export default function sendRequest(
           dispatch(setSong(parsedGeneratedResponse));
           dispatch(
             addMessage({
+              isRegenerated: false,
               isPrompt: false,
               message: `Playing ${currentSong.title} by ${currentSong.primaryArtists} on Rhythmie`,
             })
@@ -75,6 +86,7 @@ export default function sendRequest(
           if (!generatedResults.ok || !generatedResponse.ok)
             dispatch(
               addMessage({
+                isRegenerated: false,
                 isPrompt: false,
                 message:
                   "Sorry, I was unable to generate a response. Please try again.",
@@ -82,13 +94,44 @@ export default function sendRequest(
             );
           dispatch(setResponseLoading(false));
         } else {
-          dispatch(addMessage({ isPrompt: true, message: prompt }));
+          dispatch(
+            addMessage({
+              isRegenerated: false,
+              isPrompt: true,
+              message: prompt,
+            })
+          );
 
-          if (!index) {
+          if (index) {
+            const response = await generateResponse(
+              conversation[index - 1].message
+            );
+
+            if (response) {
+              dispatch(
+                setMessageAtIndex({
+                  isRegenerated: true,
+                  isPrompt: false,
+                  message: response.response,
+                  index,
+                })
+              );
+            } else {
+              dispatch(
+                addMessage({
+                  isRegenerated: false,
+                  isPrompt: false,
+                  message:
+                    "Sorry, I was unable to generate a response. Please try again.",
+                })
+              );
+            }
+          } else {
             const response = await generateResponse(prompt);
             if (response) {
               dispatch(
                 addMessage({
+                  isRegenerated: false,
                   isPrompt: false,
                   message: response.response,
                 })
@@ -96,6 +139,7 @@ export default function sendRequest(
             } else {
               dispatch(
                 addMessage({
+                  isRegenerated: false,
                   isPrompt: false,
                   message:
                     "Sorry, I was unable to generate a response. Please try again.",
@@ -106,15 +150,29 @@ export default function sendRequest(
         }
       } else {
         if (index) {
-          console.log("here");
-          const response = await generateResponse(conversation[index-1].message);
-          dispatch(
-            setMessageAtIndex({
-              isPrompt: false,
-              message: response.response,
-              index: index,
-            })
+          const response = await generateResponse(
+            conversation[index - 1].message
           );
+
+          if (response) {
+            dispatch(
+              setMessageAtIndex({
+                isRegenerated: true,
+                isPrompt: false,
+                message: response.response,
+                index,
+              })
+            );
+          } else {
+            dispatch(
+              addMessage({
+                isRegenerated: false,
+                isPrompt: false,
+                message:
+                  "Sorry, I was unable to generate a response. Please try again.",
+              })
+            );
+          }
         }
       }
     }

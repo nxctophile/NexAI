@@ -22,3 +22,7 @@ export interface SuggestionContext {
 export interface ResponseLoadingContext {
   value: boolean;
 }
+
+export interface RegenerationContext {
+  value: boolean;
+}

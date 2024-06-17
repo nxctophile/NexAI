@@ -18,9 +18,9 @@ export const conversationSlice = createSlice({
       state.value = [];
     },
     setMessageAtIndex: (state, action) => {
-      const { isPrompt, message, index } = action.payload;
+      const { isRegenerated, isPrompt, message, index } = action.payload;
       if (index !== undefined) {
-        state.value[index] = { isPrompt, message };
+        state.value[index] = { isRegenerated, isPrompt, message };
       }
     },
   },

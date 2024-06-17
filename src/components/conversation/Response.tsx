@@ -14,7 +14,12 @@ import { ResponseComponentTypes } from "../../types/types";
  * @returns The Response component populated with the provided response content, interactive elements, and potentially the RhythmieComponent.
  */
 
-export default function Response({ response, regenerate, report }: ResponseComponentTypes) {
+export default function Response({
+  response,
+  isRegenerated,
+  regenerate,
+  report,
+}: ResponseComponentTypes) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const copiedCodeRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +35,10 @@ export default function Response({ response, regenerate, report }: ResponseCompo
     (state: RootState) => state.songInfo.value,
     equalityFunction
   );
+  const loading = useSelector(
+    (state: RootState) => state.responseLoading.value,
+    equalityFunction
+  );
 
   /**
    * Copies the provided text to the clipboard and temporarily updates the UI to reflect the copy action.
@@ -37,14 +46,13 @@ export default function Response({ response, regenerate, report }: ResponseCompo
    */
   const handleCopy = (code: string) => {
     return () => {
-        navigator.clipboard.writeText(code);
-        if (copiedCodeRef.current) {
-          copiedCodeRef.current.style.opacity = "1";
-          setTimeout(() => {
-            if (copiedCodeRef.current)
-              copiedCodeRef.current.style.opacity = "0";
-          }, 1000);
-        }
+      navigator.clipboard.writeText(code);
+      if (copiedCodeRef.current) {
+        copiedCodeRef.current.style.opacity = "1";
+        setTimeout(() => {
+          if (copiedCodeRef.current) copiedCodeRef.current.style.opacity = "0";
+        }, 1000);
+      }
     };
   };
 
@@ -57,75 +65,90 @@ export default function Response({ response, regenerate, report }: ResponseCompo
     <div className="response">
       <div className="nexai-response">
         <img className="nexai-logo" src={nex} alt="" />
-        <div className="nexai-text">NexAI</div>
-      </div>
-
-      <Markdown
-        className="response-markdown"
-        components={{
-          code(props) {
-            const { children, className, ...rest } = props;
-            const match = /language-(\w+)/.exec(className || "");
-            return match ? (
-              <>
-                <div className="code-actions">
-                  <button
-                    onClick={handleCopy(String(children).replace(/\n$/, ""))}
-                    className="copy-button"
-                  >
-                    <span className="material-symbols-outlined">
-                      content_copy
-                    </span>
-                  </button>
-                  <div ref={copiedCodeRef} className="copied-code">
-                    <span className="material-symbols-outlined">check</span>
-                    Copied to clipboard
-                  </div>
-                </div>
-                {/* @ts-expect-error - Adding this line to remove the unnecessary type warning*/}
-                <SyntaxHighlighter
-                  {...rest}
-                  PreTag="div"
-                  language={match[1]}
-                  style={twilight}
-                  className="code-block"
-                >
-                  {String(children).replace(/\n$/, "")}
-                </SyntaxHighlighter>
-              </>
-            ) : (
-              <code {...rest} className={className}>
-                {children}
-              </code>
-            );
-          },
-        }}
-      >
-        {response}
-      </Markdown>
-
-      {song && response?.includes("Rhythmie") && (
-        <RhythmieComponent song={song} />
-      )}
-
-      <div className="response-actions">
-        <button
-          onClick={handleCopy(response)}
-          className="response-action response-copy-button"
-        >
-          <span className="material-symbols-outlined">content_copy</span>
-        </button>
-        <button onClick={regenerate} className="response-action response-regenerate-button">
-          <span className="material-symbols-outlined">sync</span>
-        </button>
-        <button onClick={report} className="response-action response-report-button">
-          <span className="material-symbols-outlined">report</span>
-        </button>
-        <div ref={copiedCodeRef} className="copied-code">
-          <span className="material-symbols-outlined">check</span>
-          Copied to clipboard
+        <div className="nexai-text">
+          {isRegenerated && <> Re: </>}
+          NexAI
         </div>
       </div>
+
+      {!loading && (
+        <>
+          <Markdown
+            className="response-markdown"
+            components={{
+              code(props) {
+                const { children, className, ...rest } = props;
+                const match = /language-(\w+)/.exec(className || "");
+                return match ? (
+                  <>
+                    <div className="code-actions">
+                      <button
+                        onClick={handleCopy(
+                          String(children).replace(/\n$/, "")
+                        )}
+                        className="copy-button"
+                      >
+                        <span className="material-symbols-outlined">
+                          content_copy
+                        </span>
+                      </button>
+                      <div ref={copiedCodeRef} className="copied-code">
+                        <span className="material-symbols-outlined">check</span>
+                        Copied to clipboard
+                      </div>
+                    </div>
+                    {/* @ts-expect-error - Adding this line to remove the unnecessary type warning*/}
+                    <SyntaxHighlighter
+                      {...rest}
+                      PreTag="div"
+                      language={match[1]}
+                      style={twilight}
+                      className="code-block"
+                    >
+                      {String(children).replace(/\n$/, "")}
+                    </SyntaxHighlighter>
+                  </>
+                ) : (
+                  <code {...rest} className={className}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          >
+            {response}
+          </Markdown>
+
+          {song && response?.includes("Rhythmie") && (
+            <RhythmieComponent song={song} />
+          )}
+
+          <div className="response-actions">
+            <button
+              onClick={handleCopy(response)}
+              className="response-action response-copy-button"
+            >
+              <span className="material-symbols-outlined">content_copy</span>
+            </button>
+            <button
+              onClick={regenerate}
+              className="response-action response-regenerate-button"
+            >
+              <span className="material-symbols-outlined">sync</span>
+            </button>
+            <button
+              onClick={report}
+              className="response-action response-report-button"
+            >
+              <span className="material-symbols-outlined">report</span>
+            </button>
+            <div ref={copiedCodeRef} className="copied-code">
+              <span className="material-symbols-outlined">check</span>
+              Copied to clipboard
+            </div>
+          </div>
+        </>
+      )}
 
       <div ref={bottomRef} className="bottom" />
     </div>

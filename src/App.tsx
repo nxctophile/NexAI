@@ -44,7 +44,9 @@ export default function App() {
       </div>
 
       <section className="main-container">
-        {conversation.length === 0 && <HeroSection />}
+        {conversation.length === 0 && (
+          <HeroSection inputRef={inputRef} conversation={conversation} />
+        )}
 
         <section ref={mainSectionRef} className="main-section">
           {conversation.map((message, index) => {
@@ -58,7 +60,13 @@ export default function App() {
               <Response
                 key={index}
                 response={message.message}
-                regenerate={sendRequest(inputRef, dispatch, conversation, index)}
+                isRegenerated={message.isRegenerated}
+                regenerate={sendRequest(
+                  inputRef,
+                  dispatch,
+                  conversation,
+                  index
+                )}
                 report={report(index)}
               />
             );
