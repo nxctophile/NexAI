@@ -25,7 +25,7 @@ export default function sendRequest(
       dispatch(setResponseLoading(true));
 
       const generatedResponse = await fetch(
-        `http://nexai-server.vercel.app/api?prompt=${prompt}`
+        `https://nexai-server.vercel.app/api?prompt=${prompt}`
       );
 
       dispatch(setResponseLoading(false));
