@@ -11,7 +11,7 @@ export default function Sidebar() {
   return (
     <nav className="sidebar">
       <button className="collapse-sidebar">
-        <img src={arrow} alt="" />
+        <img src={arrow} alt="arrow" />
       </button>
       <button onClick={() => dispatch(clearMessages())} className="new-chat">
         <span className="material-symbols-outlined sidebar-logo">

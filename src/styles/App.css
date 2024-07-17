@@ -28,7 +28,7 @@
 
 .main-container {
   height: 100vh;
-  width: 85vw;
+  width: 100%;
   background: #171717;
   overflow: scroll;
   overflow-x: hidden;
