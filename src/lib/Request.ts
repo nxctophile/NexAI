@@ -25,7 +25,7 @@ export default function sendRequest(
       dispatch(setResponseLoading(true));
 
       const generatedResponse = await fetch(
-        `https://nexai-server.vercel.app/api?prompt=${prompt}`
+        `https://traditional-daryn-nxctophile-d3f9d10c.koyeb.app/generate?prompt=${prompt}`
       );
 
       dispatch(setResponseLoading(false));

@@ -23,6 +23,10 @@ export interface ResponseLoadingContext {
   value: boolean;
 }
 
+export interface SidebarStateContext {
+  value: boolean;
+}
+
 export interface RegenerationContext {
   value: boolean;
 }
