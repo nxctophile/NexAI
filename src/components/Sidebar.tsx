@@ -14,7 +14,6 @@ export default function Sidebar() {
 
   const toggleSidebar = () => {
     if (sidebarRef.current && collapseSidebarRef.current) {
-      
       if (sidebarState) {
         sidebarRef.current.style.width = "0vw";
         collapseSidebarRef.current.style.left = "0.2vw";
@@ -24,6 +23,7 @@ export default function Sidebar() {
         collapseSidebarRef.current.style.left = "15.2vw";
         collapseSidebarRef.current.style.transform = "translateY(-50%)";
       }
+      setSidebarState(!sidebarState);
     }
   }
 
