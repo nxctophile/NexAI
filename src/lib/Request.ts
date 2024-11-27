@@ -25,7 +25,7 @@ export default function sendRequest(
       dispatch(setResponseLoading(true));
 
       const generatedResponse = await fetch(
-        `https://traditional-daryn-nxctophile-d3f9d10c.koyeb.app/generate?prompt=${prompt}`
+        `https://nexai-server.onrender.com/generate?prompt=${prompt}`
       );
 
       dispatch(setResponseLoading(false));
